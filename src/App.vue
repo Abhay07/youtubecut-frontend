@@ -171,12 +171,19 @@ export default {
         method:'GET'
       })
       .then((res)=>{
+        if(res.status != 200){
+          throw '';
+          return;
+        }
         return res.text();
       })
       .then((res)=>{
          const videoUrl = `${API_URL}${res}`;
          this.downloadVideoUrl = videoUrl;
        })
+      .catch(()=>{
+        
+      })
       .finally(()=>{
         this.loading = false;
       })
