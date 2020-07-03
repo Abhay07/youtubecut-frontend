@@ -119,6 +119,7 @@ export default {
         this.downloadVideoUrl = null;
         this.videoId = videoId;
         this.startTimeSeconds = this.endTimeSeconds = 0;
+        this.downloadVideoUrl = null;
       }
       else{
         this.videoId = null;
@@ -166,7 +167,9 @@ export default {
       if(this.quality){
         url += `quality=${this.quality}`
       }
-      fetch(url)
+      fetch(url,{
+        method:'GET'
+      })
       .then((res)=>{
         return res.text();
       })
