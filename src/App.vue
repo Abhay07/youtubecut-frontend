@@ -87,7 +87,7 @@ export default {
   computed:{
     duration(){
       if(this.startTimeSeconds && this.endTimeSeconds && (this.endTimeSeconds > this.startTimeSeconds)){
-        return (this.endTimeSeconds - this.startTimeSeconds)
+        return (this.endTimeSeconds - this.startTimeSeconds).toFixed(2)
       }
       else{
         return null
@@ -131,13 +131,13 @@ export default {
     setStartTime(){
       this.player.getCurrentTime()
       .then(time=>{
-        this.startTimeSeconds = Math.floor(time);
+        this.startTimeSeconds = Number(time.toFixed(2));
       });
     },
     setEndTime(){
       this.player.getCurrentTime()
       .then(time=>{
-        this.endTimeSeconds = Math.floor(time);
+        this.endTimeSeconds = Number(time.toFixed(2));
       });
       this.player.pauseVideo();
     },
