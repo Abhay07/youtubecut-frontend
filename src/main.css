@@ -1,0 +1,153 @@
+body{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+
+.row{
+	display: flex;
+	justify-content: center !important;
+}
+input,select{
+	padding: 10px;
+	border-radius: 5px;
+	font-size: 16px;
+}
+
+.urlInput{
+	width:400px;
+	margin-right: 5px;
+}
+
+button{
+	border:none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	background-color: green;
+	color:#fff;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+button:hover{
+	background-color: red;
+}
+
+.top-container{
+	margin-bottom: 50px;
+}
+
+.action-container > div{
+	margin-bottom: 15px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.action-container{
+	margin-right: 50px;
+	width: 400px;
+}
+
+div.error{
+	color:red;
+	font-size: 16px;
+	text-align: right;
+	display: block;
+}
+
+input.time{
+	width:50px;
+	padding:0;
+	height: 30px;
+}
+
+.second-label{
+	display: inline-block;
+	font-size: 23px;
+	margin-left: 5px;
+}
+a{
+	color:blue;
+	text-decoration: underline;
+	font-size: 30px;
+}
+.loader{
+	position: fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	background-color: rgba(0,0,0,0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+@media only screen and (orientation: portrait){
+	.main-container{
+		flex-direction: column-reverse;
+
+	}
+	.action-container{
+		width:100%;
+		margin-right: 0;
+	}
+
+	#app{
+		width: 100%;
+	}
+
+	.urlInput{
+		width: 100%;
+	}
+
+	iframe{
+		width: 100%;
+		height: auto;
+		margin-bottom: 20px;
+	}
+}
+
