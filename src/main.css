@@ -9,6 +9,10 @@ body{
   font-size: 16px;
 }
 
+#app{
+	width:100%;
+}
+
 
 .row{
 	display: flex;
@@ -20,8 +24,9 @@ input,select{
 	font-size: 16px;
 }
 
+
 .urlInput{
-	width:400px;
+	width:100%;
 	margin-right: 5px;
 }
 
