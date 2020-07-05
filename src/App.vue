@@ -48,7 +48,7 @@
       <button @click="download">CUT VIDEO</button>
     </div>
     <div class="row">
-      <a :href="downloadVideoUrl" target="_blank" v-show="downloadVideoUrl">Download Link</a>
+      <a :href="downloadVideoUrl" target="_blank" download v-show="downloadVideoUrl">Download Link</a>
     </div>
   </div>
       <youtube :video-id="videoId" ref="youtube" :player-vars="playerVars" @playing="playing" ></youtube>
