@@ -1,5 +1,7 @@
 # youtubecutter-frontend
 
+Youtube cut website - https://youtubecut.com
+
 ## Project setup
 ```
 yarn install
