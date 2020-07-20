@@ -5,7 +5,7 @@
       <button @click="setVideoUrl">START</button>  
     </div>
     <div class="row main-container" v-if="videoId">
-  <div class="action-container" >
+  <div class="action-container" v-if="!playerLoading">
     <div>
       <button @click="setStartTime">SET START TIME</button>
       <button @click="setEndTime">SET END TIME</button>
@@ -82,7 +82,8 @@ export default {
     },
     loading:false,
     showPlayer:false,
-    downloadVideoUrl:null
+    downloadVideoUrl:null,
+    playerLoading:false
   }),
   computed:{
     duration(){
@@ -94,7 +95,7 @@ export default {
       }
     },
     player() {
-      return this.$refs.youtube.player
+      return this.$refs.youtube && this.$refs.youtube.player
     },
     startTimeError(){
       return this.startTimeSeconds && isNaN(this.startTimeSeconds)
@@ -105,6 +106,7 @@ export default {
   },
   methods:{
     setVideoUrl(){
+      this.playerLoading = true;
       let videoId;
       const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
       if(mobileUrlMatch){
@@ -114,7 +116,6 @@ export default {
         videoId = this.userUrlInput.split(/(\?v=)|&/);
         videoId = videoId[2]
       }
-      console.log(videoId)
       if(videoId){
         this.downloadVideoUrl = null;
         this.videoId = videoId;
@@ -124,9 +125,22 @@ export default {
       else{
         this.videoId = null;
       }
+      setTimeout(()=>{
+        if(this.$refs.youtube && this.$refs.youtube.player){
+        this.$refs.youtube.player.getPlayerState()
+        .then((res)=>{
+          if(res == 1){
+            this.playerLoading = false;
+          }
+        })
+        .catch();
+      };
+    },0)
+      
     },
     playing() {
       console.log('we are watching!!!')
+      this.playerLoading = false;
     },
     setStartTime(){
       this.player.getCurrentTime()
