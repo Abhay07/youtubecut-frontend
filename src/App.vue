@@ -13,20 +13,20 @@
     <div>
       <span>START</span>
       <div>
-        <input v-model="startTimeSeconds"/>
+        <input v-model="startTimeSeconds" maxlength="6"/>
         <span class="second-label">s</span>
       </div>
     </div>
-    <div  class="error" v-show="startTimeError">Incorrect Start Time</div>
+    <div  class="error" v-show="cutVideoClicked && startTimeError">{{startTimeErrMsg}}</div>
 
     <div>
       <span>END</span>
       <div>
-        <input v-model="endTimeSeconds"/>
+        <input v-model="endTimeSeconds" maxlength="6" />
         <span class="second-label">s</span>
       </div>
     </div>
-    <div  class="error" v-show="endTimeError">Incorrect End Time</div>
+    <div  class="error" v-show="cutVideoClicked && endTimeError">{{endTimeErrMsg}}</div>
 
     <div>
       <span>DURATION</span>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import {API_URL} from './constants.js';
+import {API_URL, TIME_FORMAT_ERROR,END_TIME_ERROR} from './constants.js';
 export default {
   name: 'App',
   data:()=>({
@@ -83,7 +83,10 @@ export default {
     loading:false,
     showPlayer:false,
     downloadVideoUrl:null,
-    playerLoading:false
+    playerLoading:false,
+    startTimeErrMsg:'',
+    endTimeErrMsg:'',
+    cutVideoClicked:false
   }),
   computed:{
     duration(){
@@ -98,10 +101,23 @@ export default {
       return this.$refs.youtube && this.$refs.youtube.player
     },
     startTimeError(){
-      return this.startTimeSeconds && isNaN(this.startTimeSeconds)
+      if(this.startTimeSeconds && isNaN(this.startTimeSeconds)){
+        this.startTimeErrMsg = TIME_FORMAT_ERROR;
+        return true;
+      }
+      return false;
     },
     endTimeError(){
-      return this.endTimeSeconds && (isNaN(this.endTimeSeconds) || (this.endTimeSeconds < this.startTimeSeconds))
+      if(this.endTimeSeconds && (isNaN(this.endTimeSeconds))){
+        console.log(this.endTimeSeconds);
+        this.endTimeErrMsg = TIME_FORMAT_ERROR;
+        return true;
+      }
+      else if(this.endTimeSeconds < this.startTimeSeconds){
+        this.endTimeErrMsg = END_TIME_ERROR;
+        return true;
+      }
+      return false;
     }
   },
   methods:{
@@ -165,6 +181,7 @@ export default {
       }
     },
     download(){
+      this.cutVideoClicked = true;
       if(!this.duration){
         return;
       }

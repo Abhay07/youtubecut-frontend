@@ -5,3 +5,10 @@ export function checkTimeFormat(text){
 	}
 	return true;
 }
+
+
+export function parseTime(sec){
+	const minutes = Math.floor(sec/60);
+	const seconds = sec%60;
+	return `${minutes}:${seconds}`;
+}
