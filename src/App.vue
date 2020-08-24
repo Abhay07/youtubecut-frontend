@@ -2,7 +2,18 @@
   <div id="app">
     <div class="row top-container">
       <input class="urlInput" placeholder="Paste Youtube video link here" v-model="userUrlInput" @keypress.enter="setVideoUrl"/>
-      <button @click="setVideoUrl">START</button>  
+      <button @click="setVideoUrl" v-show="userUrlInput" :class="{mb0:!showFullVideoOptions}">Start Cutting</button>  
+      <button @click="downloadFullVideo" v-show="userUrlInput && showFullVideoOptions">Download Whole Video</button>
+      <select v-model="fullVideoQuality" v-show="userUrlInput && showFullVideoOptions">
+        <option value="highest">Quality highest</option>
+        <option value="18">Quality medium</option>
+      </select>  
+    </div>
+    <div class="download-link">
+    <a :href="fullVideoUrl"  target="_blank" download v-show="fullVideoUrl">Download Link</a>
+    </div>
+    <div class="playIns" v-show="!showFullVideoOptions">
+      Play Video to see cutting options
     </div>
     <div class="row main-container" v-if="videoId">
   <div class="action-container" v-if="!playerLoading">
@@ -86,7 +97,10 @@ export default {
     playerLoading:false,
     startTimeErrMsg:'',
     endTimeErrMsg:'',
-    cutVideoClicked:false
+    cutVideoClicked:false,
+    fullVideoUrl:'',
+    fullVideoQuality:18,
+    showFullVideoOptions:true
   }),
   computed:{
     duration(){
@@ -122,6 +136,8 @@ export default {
   },
   methods:{
     setVideoUrl(){
+      this.showFullVideoOptions = false;
+      this.fullVideoUrl = null;
       this.playerLoading = true;
       let videoId;
       const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
@@ -157,6 +173,7 @@ export default {
     playing() {
       console.log('we are watching!!!')
       this.playerLoading = false;
+      window.scrollTo(0,500);
     },
     setStartTime(){
       this.player.getCurrentTime()
@@ -211,6 +228,7 @@ export default {
       .then((res)=>{
          const videoUrl = `${API_URL}${res}`;
          this.downloadVideoUrl = videoUrl;
+         window.scrollTo(0,550);
        })
       .catch(()=>{
         
@@ -219,6 +237,38 @@ export default {
         this.loading = false;
       })
 
+    },
+    downloadFullVideo(){
+      let videoId;
+      const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
+      if(mobileUrlMatch){
+        videoId = mobileUrlMatch[1];
+      }
+      else{
+        videoId = this.userUrlInput.split(/(\?v=)|&/);
+        videoId = videoId[2]
+      }
+      let url = `${API_URL}full?quality=${this.fullVideoQuality}&video=https://www.youtube.com/watch?v=${videoId}`
+      this.loading = true;
+       fetch(url,{
+        method:'GET'
+      })
+      .then((res)=>{
+        if(res.status != 200){
+          throw '';
+          return;
+        }
+        return res.text();
+      })
+      .then((res)=>{
+         this.fullVideoUrl = res;
+       })
+      .catch(()=>{
+        
+      })
+      .finally(()=>{
+        this.loading = false;
+      })
     }
   }
 }
