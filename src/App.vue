@@ -239,6 +239,7 @@ export default {
 
     },
     downloadFullVideo(){
+      this.fullVideoUrl = null;
       let videoId;
       const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
       if(mobileUrlMatch){
