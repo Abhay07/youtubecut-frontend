@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="row top-container">
-      <input class="urlInput" placeholder="Paste Youtube video link here" v-model="userUrlInput" @keypress.enter="setVideoUrl"/>
+      <input class="urlInput" placeholder="Paste Youtube video link here" v-model="userUrlInput" @keypress.enter="setVideoUrl" @change="hideDownloadLink"/>
       <button @click="setVideoUrl" v-show="userUrlInput" :class="{mb0:!showFullVideoOptions}">Start Cutting</button>  
       <button @click="downloadFullVideo" v-show="userUrlInput && showFullVideoOptions">Download Whole Video</button>
       <select v-model="fullVideoQuality" v-show="userUrlInput && showFullVideoOptions">
@@ -24,7 +24,7 @@
     <div>
       <span>START</span>
       <div>
-        <input v-model="startTimeSeconds" maxlength="6"/>
+        <input v-model="startTimeSeconds" maxlength="6" @change="hideDownloadLink"/>
         <span class="second-label">s</span>
       </div>
     </div>
@@ -33,7 +33,7 @@
     <div>
       <span>END</span>
       <div>
-        <input v-model="endTimeSeconds" maxlength="6" />
+        <input v-model="endTimeSeconds" maxlength="6" @change="hideDownloadLink"/>
         <span class="second-label">s</span>
       </div>
     </div>
@@ -48,7 +48,7 @@
     </div>
     <div>
       <span>QUALITY</span>
-      <select v-model="quality">
+      <select v-model="quality" @change="hideDownloadLink">
         <option value="1">Low</option>
         <option value="4">Medium</option>
         <option value="9">High</option>
@@ -104,7 +104,7 @@ export default {
   }),
   computed:{
     duration(){
-      if(this.startTimeSeconds && this.endTimeSeconds && (this.endTimeSeconds > this.startTimeSeconds)){
+      if(!isNaN(this.startTimeSeconds) && !isNaN(this.endTimeSeconds) && (this.endTimeSeconds > this.startTimeSeconds)){
         return (this.endTimeSeconds - this.startTimeSeconds).toFixed(2)
       }
       else{
@@ -205,16 +205,7 @@ export default {
       this.downloadVideoUrl = null;
       this.player.pauseVideo();
       this.loading = true;
-      let url = `${API_URL}?video=https://www.youtube.com/watch?v=${this.videoId}&`
-      if(this.startTimeSeconds){
-        url += `start=${this.startTimeSeconds}&`;
-      }
-      if(this.endTimeSeconds){
-        url += `end=${this.endTimeSeconds}&`
-      }
-      if(this.quality){
-        url += `quality=${this.quality}`
-      }
+      let url = `${API_URL}?video=https://www.youtube.com/watch?v=${this.videoId}&start=${this.startTimeSeconds}&end=${this.endTimeSeconds}&quality=${this.quality}`
       fetch(url,{
         method:'GET'
       })
@@ -270,6 +261,9 @@ export default {
       .finally(()=>{
         this.loading = false;
       })
+    },
+    hideDownloadLink(){
+      this.downloadVideoUrl = null;
     }
   }
 }
