@@ -217,8 +217,7 @@ export default {
         return res.text();
       })
       .then((res)=>{
-         const videoUrl = `${API_URL}${res}`;
-         this.downloadVideoUrl = videoUrl;
+         this.downloadVideoUrl = res;
          window.scrollTo(0,550);
        })
       .catch(()=>{
