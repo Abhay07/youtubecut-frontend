@@ -205,7 +205,8 @@ export default {
       this.downloadVideoUrl = null;
       this.player.pauseVideo();
       this.loading = true;
-      let url = `${API_URL}?video=https://www.youtube.com/watch?v=${this.videoId}&start=${this.startTimeSeconds}&end=${this.endTimeSeconds}&quality=${this.quality}`
+      const videoUrl = encodeURIComponent(`https://www.youtube.com/watch?v=${this.videoId}`)
+      let url = `${API_URL}?video=${videoUrl}&start=${this.startTimeSeconds}&end=${this.endTimeSeconds}&quality=${this.quality}`
       fetch(url,{
         method:'GET'
       })
