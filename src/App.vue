@@ -1,18 +1,22 @@
 <template>
-  <div id="app">
-    <div class="row top-container">
-      <input class="urlInput" placeholder="Paste Youtube video link here" v-model="userUrlInput" @keypress.enter="setVideoUrl" @change="hideDownloadLink"/>
-      <button @click="setVideoUrl" v-show="userUrlInput" :class="{mb0:!showFullVideoOptions}">Start Cutting</button>  
-      <button @click="downloadFullVideo" v-show="userUrlInput && showFullVideoOptions">Download Whole Video</button>
-      <select v-model="fullVideoQuality" v-show="userUrlInput && showFullVideoOptions">
-        <option value="highest">Quality highest</option>
-        <option value="18">Quality medium</option>
-      </select>  
-    </div>
-    <div class="download-link">
-    <a :href="fullVideoUrl"  target="_blank" download v-show="fullVideoUrl">Download Link</a>
-    </div>
-    <div class="playIns" v-show="!showFullVideoOptions">
+    <div id="app">
+        <div class="row top-container">
+                <div class="input-wrapper">
+                    <input class="urlInput" placeholder="Paste Youtube video link here" v-model="userUrlInput" @input="setVideoUrl" />
+                    <div class="error" v-show="invalidVideoUrlError && downloadBtnClicked">{{INVALID_VIDEO_URL_ERROR}}</div>
+                </div>
+                <!-- <button @click="setVideoUrl" v-show="userUrlInput" :class="{mb0:!showFullVideoOptions}">Start Cutting</button>   -->
+                 <select v-model="fullVideoQuality">
+                    <option value="highest">Quality highest</option>
+                    <option value="18">Quality medium</option>
+                </select>
+                <button @click="downloadFullVideo">Download Video</button>
+               
+        </div>
+        <div class="download-link">
+            <a :href="fullVideoUrl" target="_blank" download v-show="fullVideoUrl">Download Link</a>
+        </div>
+        <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
     </div>
     <div class="row main-container" v-if="videoId">
@@ -64,211 +68,217 @@
   </div>
       <youtube :video-id="videoId" ref="youtube" :player-vars="playerVars" @playing="playing" ></youtube>
     </div>
-  
-    <div class="loader" v-if="loading">
-      <div class="lds-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+  -->
+        <div class="loader" v-if="loading">
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
-
 <script>
-import {API_URL, TIME_FORMAT_ERROR,END_TIME_ERROR} from './constants.js';
+import { API_URL, TIME_FORMAT_ERROR, END_TIME_ERROR, INVALID_VIDEO_URL_ERROR } from './constants.js';
 export default {
-  name: 'App',
-  data:()=>({
-    userUrlInput:'',
-    videoId:null,
-    startTime:'00:00',
-    endTime:null,
-    quality:1,
-    startTimeSeconds:0,
-    endTimeSeconds:0,
-    playerVars:{
-      autoplay:1
-    },
-    loading:false,
-    showPlayer:false,
-    downloadVideoUrl:null,
-    playerLoading:false,
-    startTimeErrMsg:'',
-    endTimeErrMsg:'',
-    cutVideoClicked:false,
-    fullVideoUrl:'',
-    fullVideoQuality:18,
-    showFullVideoOptions:true
-  }),
-  computed:{
-    duration(){
-      if(!isNaN(this.startTimeSeconds) && !isNaN(this.endTimeSeconds) && (this.endTimeSeconds > this.startTimeSeconds)){
-        return (this.endTimeSeconds - this.startTimeSeconds).toFixed(2)
-      }
-      else{
-        return null
-      }
-    },
-    player() {
-      return this.$refs.youtube && this.$refs.youtube.player
-    },
-    startTimeError(){
-      if(this.startTimeSeconds && isNaN(this.startTimeSeconds)){
-        this.startTimeErrMsg = TIME_FORMAT_ERROR;
-        return true;
-      }
-      return false;
-    },
-    endTimeError(){
-      if(this.endTimeSeconds && (isNaN(this.endTimeSeconds))){
-        console.log(this.endTimeSeconds);
-        this.endTimeErrMsg = TIME_FORMAT_ERROR;
-        return true;
-      }
-      else if(this.endTimeSeconds < this.startTimeSeconds){
-        this.endTimeErrMsg = END_TIME_ERROR;
-        return true;
-      }
-      return false;
-    }
-  },
-  methods:{
-    setVideoUrl(){
-      this.showFullVideoOptions = false;
-      this.fullVideoUrl = null;
-      this.playerLoading = true;
-      let videoId;
-      const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
-      if(mobileUrlMatch){
-        videoId = mobileUrlMatch[1];
-      }
-      else{
-        videoId = this.userUrlInput.split(/(\?v=)|&/);
-        videoId = videoId[2]
-      }
-      if(videoId){
-        this.downloadVideoUrl = null;
-        this.videoId = videoId;
-        this.startTimeSeconds = this.endTimeSeconds = 0;
-        this.downloadVideoUrl = null;
-      }
-      else{
-        this.videoId = null;
-      }
-      setTimeout(()=>{
-        if(this.$refs.youtube && this.$refs.youtube.player){
-        this.$refs.youtube.player.getPlayerState()
-        .then((res)=>{
-          if(res == 1){
-            this.playerLoading = false;
+    name: 'App',
+    data: () => ({
+        userUrlInput: '',
+        videoId: null,
+        startTime: '00:00',
+        endTime: null,
+        quality: 1,
+        startTimeSeconds: 0,
+        endTimeSeconds: 0,
+        playerVars: {
+            autoplay: 1
+        },
+        loading: false,
+        showPlayer: false,
+        downloadVideoUrl: null,
+        playerLoading: false,
+        startTimeErrMsg: '',
+        endTimeErrMsg: '',
+        cutVideoClicked: false,
+        fullVideoUrl: '',
+        fullVideoQuality: 18,
+        invalidVideoUrlError: false,
+        INVALID_VIDEO_URL_ERROR,
+        downloadBtnClicked:false
+    }),
+    computed: {
+        /*duration(){
+          if(!isNaN(this.startTimeSeconds) && !isNaN(this.endTimeSeconds) && (this.endTimeSeconds > this.startTimeSeconds)){
+            return (this.endTimeSeconds - this.startTimeSeconds).toFixed(2)
           }
-        })
-        .catch();
-      };
-    },0)
-      
+          else{
+            return null
+          }
+        },
+        player() {
+          return this.$refs.youtube && this.$refs.youtube.player
+        },
+        startTimeError(){
+          if(this.startTimeSeconds && isNaN(this.startTimeSeconds)){
+            this.startTimeErrMsg = TIME_FORMAT_ERROR;
+            return true;
+          }
+          return false;
+        },
+        endTimeError(){
+          if(this.endTimeSeconds && (isNaN(this.endTimeSeconds))){
+            console.log(this.endTimeSeconds);
+            this.endTimeErrMsg = TIME_FORMAT_ERROR;
+            return true;
+          }
+          else if(this.endTimeSeconds < this.startTimeSeconds){
+            this.endTimeErrMsg = END_TIME_ERROR;
+            return true;
+          }
+          return false;
+        }*/
     },
-    playing() {
-      console.log('we are watching!!!')
-      this.playerLoading = false;
-      window.scrollTo(0,500);
-    },
-    setStartTime(){
-      this.player.getCurrentTime()
-      .then(time=>{
-        this.startTimeSeconds = Number(time.toFixed(2));
-      });
-    },
-    setEndTime(){
-      this.player.getCurrentTime()
-      .then(time=>{
-        this.endTimeSeconds = Number(time.toFixed(2));
-      });
-      this.player.pauseVideo();
-    },
-    preview(){
-      if(this.duration){
-        this.player.seekTo(this.startTimeSeconds);
-        setTimeout(()=>{
-          this.player.pauseVideo();
-        },(this.duration+1)*1000);
-        this.player.playVideo();
-      }
-    },
-    download(){
-      this.cutVideoClicked = true;
-      if(!this.duration){
-        return;
-      }
-      this.downloadVideoUrl = null;
-      this.player.pauseVideo();
-      this.loading = true;
-      const videoUrl = encodeURIComponent(`https://www.youtube.com/watch?v=${this.videoId}`)
-      let url = `${API_URL}?video=${videoUrl}&start=${this.startTimeSeconds}&end=${this.endTimeSeconds}&quality=${this.quality}`
-      fetch(url,{
-        method:'GET'
-      })
-      .then((res)=>{
-        if(res.status != 200){
-          throw '';
-          return;
-        }
-        return res.text();
-      })
-      .then((res)=>{
-         this.downloadVideoUrl = res;
-         window.scrollTo(0,550);
-       })
-      .catch(()=>{
-        
-      })
-      .finally(()=>{
-        this.loading = false;
-      })
+    methods: {
+        setVideoUrl() {
+            this.hideDownloadLink();
+            this.invalidVideoUrlError = false;
+            this.fullVideoUrl = null;
+            this.playerLoading = true;
+            let videoId;
+            const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
+            const desktopUrlMatch = this.userUrlInput.match(/^.+youtube\.com\/watch\?v=.+$/);;
+            if (mobileUrlMatch) {
+                videoId = mobileUrlMatch[1];
+            } else if (desktopUrlMatch) {
+                videoId = this.userUrlInput.split(/(\?v=)|&/);
+                videoId = videoId[2]
+            } else {
+                this.invalidVideoUrlError = true;
+                return;
+            }
+            if (videoId) {
+                this.downloadVideoUrl = null;
+                this.videoId = videoId;
+                this.startTimeSeconds = this.endTimeSeconds = 0;
+                this.downloadVideoUrl = null;
+            } else {
+                this.videoId = null;
+            }
+            setTimeout(() => {
+                if (this.$refs.youtube && this.$refs.youtube.player) {
+                    this.$refs.youtube.player.getPlayerState()
+                        .then((res) => {
+                            if (res == 1) {
+                                this.playerLoading = false;
+                            }
+                        })
+                        .catch();
+                };
+            }, 0)
 
-    },
-    downloadFullVideo(){
-      this.fullVideoUrl = null;
-      let videoId;
-      const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
-      if(mobileUrlMatch){
-        videoId = mobileUrlMatch[1];
-      }
-      else{
-        videoId = this.userUrlInput.split(/(\?v=)|&/);
-        videoId = videoId[2]
-      }
-      let url = `${API_URL}full?quality=${this.fullVideoQuality}&video=https://www.youtube.com/watch?v=${videoId}`
-      this.loading = true;
-       fetch(url,{
-        method:'GET'
-      })
-      .then((res)=>{
-        if(res.status != 200){
-          throw '';
-          return;
+        },
+        playing() {
+            console.log('we are watching!!!')
+            this.playerLoading = false;
+            window.scrollTo(0, 500);
+        },
+        setStartTime() {
+            this.player.getCurrentTime()
+                .then(time => {
+                    this.startTimeSeconds = Number(time.toFixed(2));
+                });
+        },
+        setEndTime() {
+            this.player.getCurrentTime()
+                .then(time => {
+                    this.endTimeSeconds = Number(time.toFixed(2));
+                });
+            this.player.pauseVideo();
+        },
+        preview() {
+            if (this.duration) {
+                this.player.seekTo(this.startTimeSeconds);
+                setTimeout(() => {
+                    this.player.pauseVideo();
+                }, (this.duration + 1) * 1000);
+                this.player.playVideo();
+            }
+        },
+        download() {
+            this.cutVideoClicked = true;
+            if (!this.duration) {
+                return;
+            }
+            this.downloadVideoUrl = null;
+            this.player.pauseVideo();
+            this.loading = true;
+            const videoUrl = encodeURIComponent(`https://www.youtube.com/watch?v=${this.videoId}`)
+            let url = `${API_URL}?video=${videoUrl}&start=${this.startTimeSeconds}&end=${this.endTimeSeconds}&quality=${this.quality}`
+            fetch(url, {
+                    method: 'GET'
+                })
+                .then((res) => {
+                    if (res.status != 200) {
+                        throw '';
+                        return;
+                    }
+                    return res.text();
+                })
+                .then((res) => {
+                    this.downloadVideoUrl = res;
+                    window.scrollTo(0, 550);
+                })
+                .catch(() => {
+
+                })
+                .finally(() => {
+                    this.loading = false;
+                })
+
+        },
+        downloadFullVideo() {
+          this.downloadBtnClicked = true;
+            if (this.invalidVideoUrlError) {
+                return;
+            }
+            this.fullVideoUrl = null;
+            let videoId;
+            const mobileUrlMatch = this.userUrlInput.match(/^.+youtu\.be\/(.+)$/);
+            if (mobileUrlMatch) {
+                videoId = mobileUrlMatch[1];
+            } else {
+                videoId = this.userUrlInput.split(/(\?v=)|&/);
+                videoId = videoId[2]
+            }
+            let url = `${API_URL}full?quality=${this.fullVideoQuality}&video=https://www.youtube.com/watch?v=${videoId}`
+            this.loading = true;
+            fetch(url, {
+                    method: 'GET'
+                })
+                .then((res) => {
+                    if (res.status != 200) {
+                        throw '';
+                        return;
+                    }
+                    return res.text();
+                })
+                .then((res) => {
+                    this.fullVideoUrl = res;
+                })
+                .catch(() => {
+
+                })
+                .finally(() => {
+                    this.loading = false;
+                })
+        },
+        hideDownloadLink() {
+            this.downloadVideoUrl = null;
         }
-        return res.text();
-      })
-      .then((res)=>{
-         this.fullVideoUrl = res;
-       })
-      .catch(()=>{
-        
-      })
-      .finally(()=>{
-        this.loading = false;
-      })
-    },
-    hideDownloadLink(){
-      this.downloadVideoUrl = null;
     }
-  }
 }
 </script>
-
 <style>
 @import 'main.css';
 </style>
