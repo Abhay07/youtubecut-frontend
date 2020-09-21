@@ -14,7 +14,7 @@
                
         </div>
         <div class="download-link">
-            <a :href="fullVideoUrl" download="youtubecut.com.mp4" v-show="fullVideoUrl">Download Link</a>
+            <a :href="fullVideoUrl" :download="downloadFileName" v-show="fullVideoUrl">Download Link</a>
         </div>
         <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
@@ -81,6 +81,7 @@
 </template>
 <script>
 import { API_URL, TIME_FORMAT_ERROR, END_TIME_ERROR, INVALID_VIDEO_URL_ERROR } from './constants.js';
+import {makeid} from './utils.js';
 export default {
     name: 'App',
     data: () => ({
@@ -105,7 +106,8 @@ export default {
         fullVideoQuality: 18,
         invalidVideoUrlError: false,
         INVALID_VIDEO_URL_ERROR,
-        downloadBtnClicked:false
+        downloadBtnClicked:false,
+        downloadFileName:''
     }),
     computed: {
         /*duration(){
@@ -265,6 +267,7 @@ export default {
                 })
                 .then((res) => {
                     this.fullVideoUrl = `${API_URL}download?url=${encodeURIComponent(res)}`;
+                    this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
                 })
                 .catch(() => {
 
