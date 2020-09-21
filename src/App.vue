@@ -14,7 +14,7 @@
                
         </div>
         <div class="download-link">
-            <a :href="fullVideoUrl" :download="downloadFileName" v-show="fullVideoUrl">Download Link</a>
+            <a :href="fullVideoUrl" :download="downloadFileName" v-show="fullVideoUrl" @click="setDownloadFileName">Download Link</a>
         </div>
         <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
@@ -268,7 +268,6 @@ export default {
                 .then((res) => {
                     this.fullVideoUrl = `${API_URL}download?url=${encodeURIComponent(res)}`;
                     this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
-                    console.log(`Youtubecut.com.${makeid(5)}.mp4`);
                 })
                 .catch(err => {
                     console.log(err);
@@ -279,6 +278,9 @@ export default {
         },
         hideDownloadLink() {
             this.downloadVideoUrl = null;
+        },
+        setDownloadFileName(){
+            this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
         }
     }
 }
