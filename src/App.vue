@@ -14,7 +14,7 @@
                
         </div>
         <div class="download-link">
-            <a :href="fullVideoUrl" target="_blank" download v-show="fullVideoUrl">Download Link</a>
+            <a :href="fullVideoUrl" download v-show="fullVideoUrl">Download Link</a>
         </div>
         <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
@@ -264,7 +264,7 @@ export default {
                     return res.text();
                 })
                 .then((res) => {
-                    this.fullVideoUrl = res;
+                    this.fullVideoUrl = `${API_URL}download?url=${encodeURIComponent(res)}`;
                 })
                 .catch(() => {
 
