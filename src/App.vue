@@ -14,7 +14,7 @@
                
         </div>
         <div class="download-link">
-            <a :href="fullVideoUrl" download v-show="fullVideoUrl">Download Link</a>
+            <a :href="fullVideoUrl" download="youtubecut.com.mp4" v-show="fullVideoUrl">Download Link</a>
         </div>
         <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
