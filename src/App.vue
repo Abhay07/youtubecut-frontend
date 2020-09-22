@@ -76,6 +76,7 @@
                 <div></div>
                 <div></div>
             </div>
+            <div v-show="downloadingText">Your video is downloading</div>
         </div>
     </div>
 </template>
@@ -107,7 +108,8 @@ export default {
         invalidVideoUrlError: false,
         INVALID_VIDEO_URL_ERROR,
         downloadBtnClicked:false,
-        downloadFileName:''
+        downloadFileName:'',
+        downloadingText:false
     }),
     computed: {
         /*duration(){
@@ -281,6 +283,11 @@ export default {
         },
         setDownloadFileName(){
             this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
+            this.loading = this.downloadingText = true;
+
+            setTimeout(()=>{
+                this.loading = this.downloadingText = false;
+            },2000);
         }
     }
 }
