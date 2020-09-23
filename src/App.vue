@@ -268,7 +268,7 @@ export default {
                     return res.text();
                 })
                 .then((res) => {
-                    this.fullVideoUrl = `${API_URL}download?url=${encodeURIComponent(res)}`;
+                    this.fullVideoUrl = res;
                     this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
                 })
                 .catch(err => {
