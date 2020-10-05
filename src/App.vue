@@ -112,6 +112,12 @@ export default {
         downloadingText:false,
         actualLink:AD_LINK
     }),
+    created(){
+        const script = document.createElement('script');
+        script.src = "//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=7784514f-1ca7-4667-9093-5297387caa18"
+        script.async = true;
+        document.body.appendChild(script);
+    },
     computed: {
         /*duration(){
           if(!isNaN(this.startTimeSeconds) && !isNaN(this.endTimeSeconds) && (this.endTimeSeconds > this.startTimeSeconds)){
