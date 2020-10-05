@@ -284,6 +284,7 @@ export default {
         },
         setDownloadFileName(){
             this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
+            
             setTimeout(()=>{
                 this.actualLink = this.fullVideoUrl;
             },10);
