@@ -16,7 +16,7 @@
         <div class="download-link">
             <a :href="actualLink" :download="downloadFileName" v-show="fullVideoUrl" @click="setDownloadFileName" target="_blank">Download Link</a>
         </div>
-        <iframe src="http://localhost:8080/ad.html" frameborder="0" id="ad"></iframe>
+        <iframe src="/ad.html" frameborder="0" id="ad"></iframe>
         <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
     </div>
