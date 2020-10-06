@@ -216,8 +216,12 @@ iframe#ad{
 	.error{
 		margin-bottom: 10px;
 	}
-	.adLink img{
-		width: 100%;
+	.adLink{
+		display: inline-block;
+	    width: 100%;
+	    overflow: scroll;
+	    border-top: 1px solid #9E9E9E;
+	    border-bottom: 1px solid #9E9E9E;
 	}
 }
 
