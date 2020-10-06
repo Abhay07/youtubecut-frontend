@@ -16,6 +16,7 @@
         <div class="download-link">
             <a :href="actualLink" :download="downloadFileName" v-show="fullVideoUrl" @click="setDownloadFileName" target="_blank">Download Link</a>
         </div>
+        <iframe src="http://localhost:8080/ad.html" frameborder="0" id="ad"></iframe>
         <!-- <div class="playIns" v-show="!showFullVideoOptions">
       Play Video to see cutting options
     </div>
@@ -112,12 +113,6 @@ export default {
         downloadingText:false,
         actualLink:AD_LINK
     }),
-    created(){
-        const script = document.createElement('script');
-        script.src = "//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=7784514f-1ca7-4667-9093-5297387caa18"
-        script.async = true;
-        document.body.appendChild(script);
-    },
     computed: {
         /*duration(){
           if(!isNaN(this.startTimeSeconds) && !isNaN(this.endTimeSeconds) && (this.endTimeSeconds > this.startTimeSeconds)){
