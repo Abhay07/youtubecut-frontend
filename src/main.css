@@ -216,6 +216,9 @@ iframe#ad{
 	.error{
 		margin-bottom: 10px;
 	}
+	.adLink img{
+		width: 100%;
+	}
 }
 
 
