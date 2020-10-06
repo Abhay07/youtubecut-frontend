@@ -164,6 +164,10 @@ iframe#ad{
 	height: 500px;
 }
 
+.adLink{
+	display: flex;
+	justify-content: center;
+}
 
 
 @media screen and (max-device-aspect-ratio: 1/1), (max-aspect-ratio: 1/1){
