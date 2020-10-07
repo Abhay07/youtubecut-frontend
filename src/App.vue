@@ -14,7 +14,7 @@
                
         </div>
         <div class="download-link">
-            <a :href="actualLink" :download="downloadFileName" v-show="fullVideoUrl" @click="setDownloadFileName" target="_blank">Download Link</a>
+            <a :href="fullVideoUrl" :download="downloadFileName" v-show="fullVideoUrl" @click="setDownloadFileName" target="_blank">Download Link</a>
         </div>
         <a href="https://www.amazon.in/s?k=earphones&amp;ref=nb_sb_noss_2&_encoding=UTF8&tag=abhay0aa-21&linkCode=ur2&linkId=67b436b79de8c86d79775e76beb9b6f1&camp=3638&creative=24630" class="adLink" target="_blank">
             <img src="./assets/adBanner1.png" alt="">
@@ -85,7 +85,7 @@
     </div>
 </template>
 <script>
-import { API_URL, TIME_FORMAT_ERROR, END_TIME_ERROR, INVALID_VIDEO_URL_ERROR, AD_LINK } from './constants.js';
+import { API_URL, TIME_FORMAT_ERROR, END_TIME_ERROR, INVALID_VIDEO_URL_ERROR} from './constants.js';
 import {makeid} from './utils.js';
 export default {
     name: 'App',
@@ -114,7 +114,6 @@ export default {
         downloadBtnClicked:false,
         downloadFileName:'',
         downloadingText:false,
-        actualLink:AD_LINK
     }),
     computed: {
         /*duration(){
@@ -288,10 +287,6 @@ export default {
         },
         setDownloadFileName(){
             this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
-
-            setTimeout(()=>{
-                this.actualLink = this.fullVideoUrl;
-            },10);
         }
     }
 }
