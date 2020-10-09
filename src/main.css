@@ -160,7 +160,7 @@ a{
 }
 
 iframe#ad{
-	width: 100%;
+	width: 50%;
 	height: 500px;
 }
 
@@ -189,7 +189,7 @@ iframe#ad{
 		width: 100%;
 	}
 
-	iframe{
+	iframe#ad{
 		width: 100%;
 		margin-bottom: 20px;
 	}
