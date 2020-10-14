@@ -282,8 +282,11 @@ export default {
         hideDownloadLink() {
             this.downloadVideoUrl = null;
         },
-        setDownloadFileName(){
-            this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
+        setDownloadFileName(event){
+            // event.preventDefault();
+            // window.open('http://www.linkonclick.com/jump/next.php?r=3772783');
+            // window.location.href=this.fullVideoUrl;
+            // this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
         }
     }
 }
