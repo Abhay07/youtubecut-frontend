@@ -82,7 +82,7 @@
     </div>
 </template>
 <script>
-import { API_URL, TIME_FORMAT_ERROR, END_TIME_ERROR, INVALID_VIDEO_URL_ERROR} from './constants.js';
+import { API_URL, TIME_FORMAT_ERROR, END_TIME_ERROR, INVALID_VIDEO_URL_ERROR, AD_URL} from './constants.js';
 import {makeid} from './utils.js';
 export default {
     name: 'App',
@@ -262,6 +262,7 @@ export default {
                     method: 'GET'
                 })
                 .then((res) => {
+                    console.log(res.status);
                     if (res.status != 200) {
                         throw '';
                         return;
@@ -283,9 +284,9 @@ export default {
             this.downloadVideoUrl = null;
         },
         setDownloadFileName(event){
-            // event.preventDefault();
-            // window.open('http://www.linkonclick.com/jump/next.php?r=3772783');
-            // window.location.href=this.fullVideoUrl;
+            event.preventDefault();
+            window.open(this.fullVideoUrl);
+            window.location.href=AD_URL;
             // this.downloadFileName = `Youtubecut.com.${makeid(5)}.mp4`;
         }
     }
